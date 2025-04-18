@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="nl">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Matchmaker</title>
+  </head>
+  <body>
+    <h1>Vind je match!</h1>
+    <form id="matchForm">
+      <label>Email: <input type="email" id="email" required /></label><br />
+      <label>Interesse: <input type="text" id="interesse" required /></label
+      ><br />
+      <button type="submit">Verstuur</button>
+    </form>
+
+    <p id="responseMsg"></p>
+
+    <script>
+      const form = document.getElementById("matchForm");
+      const responseMsg = document.getElementById("responseMsg");
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const email = document.getElementById("email").value;
+        const interesse = document.getElementById("interesse").value;
+
+        const response = await fetch("/submit", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, interesse }),
+        });
+
+        const data = await response.json();
+        responseMsg.innerText = data.matchFound
+          ? "🎉 Match gevonden! Check je mail!"
+          : "Nog geen match, maar we houden het in de gaten!";
+      });
+    </script>
+  </body>
+</html>
